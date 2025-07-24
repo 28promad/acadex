@@ -1,36 +1,71 @@
-<!-- templates/core/home.html -->
 {% extends 'base.html' %}
 
-{% load static %}
-
-
-
 {% block content %}
-
-<div class="card">
-    <h2>Welcome to Acadex! 🚀</h2>
-    <p>Transform your learning journey into an engaging game. Track progress, earn points, and climb the leaderboards!</p>
-    
-    {% if not user.is_authenticated %}
-        <h3>Features:</h3>
-        <ul>
-            <li>📊 Track academic progress and earn points</li>
-            <li>🏆 Compete on leaderboards</li>
-            <li>🔥 Build learning streaks</li>
-            <li>📚 Create and use flashcards</li>
-            <li>📈 See improvement over time</li>
-        </ul>
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Transform Learning Into Adventure</h1>
+        <p class="hero-subtitle">
+            Track progress, earn achievements, and climb leaderboards while mastering your subjects
+        </p>
         
-        <div style="margin: 20px 0;">
-            <a href="{% url 'signup' %}" class="btn">Get Started</a>
-            <a href="{% url 'login' %}" class="btn" style="background: #2196F3;">Login</a>
-        </div>
-    {% else %}
-        <h3>Quick Stats:</h3>
-        <p>Points: <strong>{{ user.profile.points }}</strong></p>
-        <p>Streak: <span class="streak">{{ user.profile.streak_days }} days 🔥</span></p>
-        
-        <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
-    {% endif %}
+        {% if not user.is_authenticated %}
+            <div class="hero-actions">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-large">Start Your Journey</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary btn-large">Sign In</a>
+            </div>
+        {% else %}
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-value">{{ user.profile.points|default:0 }}</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ user.profile.streak_days|default:0 }}</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-large">Go to Dashboard</a>
+            </div>
+        {% endif %}
+    </div>
 </div>
+
+{% if not user.is_authenticated %}
+<section class="features-section">
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Progress Tracking</h3>
+            <p class="feature-description">
+                Monitor your academic journey with detailed analytics and improvement insights
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3 class="feature-title">Competitive Learning</h3>
+            <p class="feature-description">
+                Climb leaderboards and compete with peers to stay motivated
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🔥</div>
+            <h3 class="feature-title">Streak Building</h3>
+            <p class="feature-description">
+                Build consistent study habits with our streak system and bonus rewards
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3 class="feature-title">Smart Flashcards</h3>
+            <p class="feature-description">
+                Create, share, and study with interactive flashcards that adapt to your progress
+            </p>
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}

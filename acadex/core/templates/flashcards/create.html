@@ -1,39 +1,72 @@
-<!-- templates/flashcards/create.html -->
 {% extends 'base.html' %}
 
 {% block title %}Create Flashcard - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>Create a Flashcard 📚</h2>
-    
-    <form method="post">
+<div class="dashboard-header">
+    <h1 class="page-title">Create New Flashcard</h1>
+    <p class="page-subtitle">Build your study materials and earn 5 points</p>
+</div>
+
+<div class="section-card">
+    <form method="post" class="auth-form">
         {% csrf_token %}
         
         <div class="form-group">
-            <label for="subject">Subject:</label>
-            <input type="text" name="subject" required placeholder="e.g. Mathematics, Science, History">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" id="subject" name="subject" class="form-input" required placeholder="e.g. Mathematics, Science, History">
         </div>
         
         <div class="form-group">
-            <label for="question">Question:</label>
-            <textarea name="question" rows="3" required placeholder="What do you want to ask?"></textarea>
+            <label for="question" class="form-label">Question</label>
+            <textarea id="question" name="question" rows="4" class="form-textarea" required placeholder="What do you want to ask?"></textarea>
         </div>
         
         <div class="form-group">
-            <label for="answer">Answer:</label>
-            <textarea name="answer" rows="3" required placeholder="What's the correct answer?"></textarea>
+            <label for="answer" class="form-label">Answer</label>
+            <textarea id="answer" name="answer" rows="4" class="form-textarea" required placeholder="What's the correct answer?"></textarea>
         </div>
         
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="is_public" value="1"> 
+        <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+                <input type="checkbox" name="is_public" value="1" class="checkbox-input">
+                <span class="checkbox-custom"></span>
                 Make this flashcard public (other students can use it)
             </label>
         </div>
         
-        <button type="submit" class="btn">Create Flashcard (+5 points)</button>
-        <a href="/flashcards/" class="btn" style="background: #666;">Cancel</a>
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">
+                Create Flashcard (+5 points)
+            </button>
+            <a href="{% url 'flashcard_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h2 class="section-title">💡 Flashcard Tips</h2>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">❓</div>
+            <h3 class="feature-title">Clear Questions</h3>
+            <p class="feature-description">Write specific, unambiguous questions that have definite answers</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">✅</div>
+            <h3 class="feature-title">Concise Answers</h3>
+            <p class="feature-description">Keep answers brief and to the point for effective studying</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🌍</div>
+            <h3 class="feature-title">Share Knowledge</h3>
+            <p class="feature-description">Make flashcards public to help other students learn</p>
+        </div>
+    </div>
 </div>
 {% endblock %}

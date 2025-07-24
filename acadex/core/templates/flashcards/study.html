@@ -1,32 +1,106 @@
-<!-- templates/flashcards/study.html -->
 {% extends 'base.html' %}
 
 {% block title %}Study Flashcard - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>📖 Study Time!</h2>
-    
-    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <p><strong>Subject:</strong> {{ flashcard.subject }}</p>
-        <h3 style="color: #333;">{{ flashcard.question }}</h3>
-    </div>
-    
-    <form method="post">
-        {% csrf_token %}
+<div class="dashboard-header">
+    <h1 class="page-title">📖 Study Session</h1>
+    <p class="page-subtitle">Answer correctly to earn 2 points</p>
+</div>
+
+<div class="section-card">
+    <div class="study-card">
+        <div class="subject-badge">{{ flashcard.subject }}</div>
         
-        <div class="form-group">
-            <label for="user_answer">Your Answer:</label>
-            <textarea name="user_answer" rows="3" required placeholder="Type your answer here..."></textarea>
-            <small>Tip: Answers are case-insensitive, so don't worry about capitalization!</small>
+        <div class="question-display">
+            <h2 class="question-text">{{ flashcard.question }}</h2>
         </div>
         
-        <button type="submit" class="btn">Submit Answer</button>
-        <a href="/flashcards/" class="btn" style="background: #666;">Back to Flashcards</a>
-    </form>
-    
-    <div style="margin-top: 30px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
-        <p><strong>💡 Remember:</strong> You'll get +2 points for each correct answer!</p>
+        <form method="post" class="study-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="user_answer" class="form-label">Your Answer</label>
+                <textarea id="user_answer" name="user_answer" rows="4" class="form-textarea" required placeholder="Type your answer here..." autofocus></textarea>
+                <small style="color: var(--text-muted); font-size: 0.875rem;">
+                    💡 Tip: Answers are case-insensitive, so don't worry about capitalization!
+                </small>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Submit Answer (+2 points)
+                </button>
+                <a href="{% url 'flashcard_list' %}" class="btn btn-secondary">Back to Flashcards</a>
+            </div>
+        </form>
     </div>
 </div>
+
+<div class="section-card">
+    <div class="study-tips">
+        <h3 style="color: var(--text-primary); margin-bottom: 1rem;">📚 Study Tips</h3>
+        <ul style="color: var(--text-secondary); line-height: 1.6;">
+            <li>Take your time to think through the answer</li>
+            <li>Use your own words - exact matches aren't required</li>
+            <li>Review incorrect answers to learn from mistakes</li>
+            <li>Create your own flashcards to reinforce learning</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.study-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.subject-badge {
+    background: var(--accent-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.question-display {
+    background: var(--bg-tertiary);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    border: 2px solid var(--glass-border);
+}
+
+.question-text {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.study-form {
+    max-width: none;
+}
+
+.study-tips {
+    background: var(--glass-bg);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--glass-border);
+}
+
+.study-tips ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.study-tips li {
+    margin-bottom: 0.5rem;
+}
+</style>
 {% endblock %}

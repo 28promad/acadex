@@ -1,46 +1,55 @@
-<!-- templates/accounts/signup.html -->
 {% extends 'base.html' %}
 
-{% block title %}Sign Up - Acadex{% endblock %}
+{% block title %}Create Account - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>Join Acadex! 🎯</h2>
-    
-    <form method="post">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" name="username" required>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-title">Start Your Journey</h1>
+            <p class="auth-subtitle">Create your account and begin gamified learning</p>
         </div>
         
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" name="email" required>
-        </div>
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password1" class="form-label">Password</label>
+                <input type="password" id="password1" name="password1" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password2" class="form-label">Confirm Password</label>
+                <input type="password" id="password2" name="password2" class="form-input" required>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_teacher" value="1" class="checkbox-input">
+                    <span class="checkbox-custom"></span>
+                    I am a teacher
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </form>
         
-        <div class="form-group">
-            <label for="password1">Password:</label>
-            <input type="password" name="password1" required>
+        <div class="auth-footer">
+            <p class="auth-link-text">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="auth-link">Sign in here</a>
+            </p>
         </div>
-        
-        <div class="form-group">
-            <label for="password2">Confirm Password:</label>
-            <input type="password" name="password2" required>
-        </div>
-        
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="is_teacher" value="1"> I am a teacher
-            </label>
-        </div>
-        
-        <button type="submit" class="btn">Sign Up</button>
-    </form>
-    
-    <p style="margin-top: 20px;">
-        Already have an account? <a href="{% url 'login' %}">Login here</a>
-    </p>
+    </div>
 </div>
 {% endblock %}

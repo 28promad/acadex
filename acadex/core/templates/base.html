@@ -1,81 +1,91 @@
-<!-- templates/base.html -->
-{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="light">
 <head>
-    <title>{% block title %}Acadex - Gamified Learning{% endblock %}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header {
-            /* background: linear-gradient(23deg, #edf5ff, #3ad542); */
-            background: #edf5ff;
-            /* color: rgb(255, 255, 255); */
-            color: #303033;
-            padding: 15px;
-            margin: -20px -20px 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border-radius: 8px 8px 0 0;
-        }
-
-        .header:hover{
-            border-radius: 16px 16px 0 0;
-            border:3px solid #
-        }
-        .nav { margin: 15px 0; }
-        .nav a { margin-right: 15px; color: #4CAF50; text-decoration: none; }
-        .nav a:hover { text-decoration: underline; }
-        .points-badge { background: #FF9800; color: white; padding: 5px 10px; border-radius: 15px; font-weight: bold; }
-        .btn { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; text-decoration: none; display: inline-block; }
-        .btn:hover { background: #45a049; }
-        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px; }
-        .streak { color: #FF5722; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background: #f9f9f9; }
-        .form-group { margin: 15px 0; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Acadex - Gamified Learning Platform{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="{% static 'assets/BlueLogo.png' %}" alt="testImage" height="80px" style="border-radius:20%">
-            <span>🎯 Acadex</span>
-            <p>Your gamified learning companion</p>
-        </div>
-        
-        <div class="nav">
-            <a href="{% url 'home' %}">Home</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}">Dashboard</a>
-                <a href="/leaderboard/">Leaderboard</a>
-                <a href="/flashcards/">Flashcards</a>
-                {% if user.profile.is_teacher %}
-                    <a href="/records/upload/">Upload Scores</a>
-                {% endif %}
-                <a href="{% url 'logout' %}">Logout ({{ user.username }})</a>
-                <span class="points-badge">{{ user.profile.points }} pts</span>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'signup' %}">Sign Up</a>
-            {% endif %}
-        </div>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="card" style="background: #d4edda; border-color: #c3e6cb;">
-                    {{ message }}
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo Placeholder -->
+            <div class="nav-brand">
+                <div class="logo-placeholder">
+                    <!-- Your logo will go here -->
+                    <span class="brand-text">Acadex</span>
                 </div>
-            {% endfor %}
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                    <a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a>
+                    <a href="{% url 'flashcard_list' %}" class="nav-link">Flashcards</a>
+                    {% if user.profile.is_teacher %}
+                        <a href="{% url 'upload_record' %}" class="nav-link">Upload Scores</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- User Actions -->
+            <div class="nav-actions">
+                <!-- Dark Mode Toggle -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-icon light-icon">☀️</span>
+                    <span class="theme-icon dark-icon">🌙</span>
+                </button>
+
+                {% if user.is_authenticated %}
+                    <!-- Points Badge -->
+                    <div class="points-badge">
+                        <span class="points-value">{{ user.profile.points|default:0 }}</span>
+                        <span class="points-label">pts</span>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <span class="username">{{ user.username }}</span>
+                        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+                    </div>
+                {% else %}
+                    <div class="auth-links">
+                        <a href="{% url 'login' %}" class="auth-link">Login</a>
+                        <a href="{% url 'signup' %}" class="auth-link signup">Get Started</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">
+                        <span class="message-text">{{ message }}</span>
+                        <button class="message-close" onclick="this.parentElement.remove()">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-        
-        {% block content %}
-        {% endblock %}
-    </div>
+
+        <!-- Page Content -->
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/theme.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,44 +1,93 @@
-<!-- templates/records/view_records.html -->
 {% extends 'base.html' %}
 
 {% block title %}Test Records - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>{% if user.profile.is_teacher %}Uploaded Test Records{% else %}My Test Records{% endif %} 📋</h2>
-    
-    {% if records %}
-        <table>
-            <tr>
-                {% if user.profile.is_teacher %}
-                <th>Student</th>
-                {% endif %}
-                <th>Subject</th>
-                <th>Score</th>
-                <th>Percentage</th>
-                <th>Test Date</th>
-                <th>Uploaded</th>
-            </tr>
-            {% for record in records %}
-            <tr>
-                {% if user.profile.is_teacher %}
-                <td>{{ record.student.username }}</td>
-                {% endif %}
-                <td>{{ record.subject }}</td>
-                <td>{{ record.score }}/{{ record.max_score }}</td>
-                <td>{{ record.score|floatformat:1 }}%</td>
-                <td>{{ record.test_date|date:"M d, Y" }}</td>
-                <td>{{ record.created_at|date:"M d, Y" }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No test records found.</p>
+<div class="dashboard-header">
+    <h1 class="page-title">
+        {% if user.profile.is_teacher %}Uploaded Test Records{% else %}My Academic Progress{% endif %}
+    </h1>
+    <p class="page-subtitle">
         {% if user.profile.is_teacher %}
-            <p>Start by <a href="{% url 'upload_record' %}">uploading your first test scores</a>!</p>
+            Track all test scores you've uploaded for students
         {% else %}
-            <p>Your teacher hasn't uploaded any scores for you yet.</p>
+            View your test performance and improvement over time
         {% endif %}
+    </p>
+</div>
+
+<div class="section-card">
+    {% if records %}
+        <div style="overflow-x: auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        {% if user.profile.is_teacher %}
+                        <th>Student</th>
+                        {% endif %}
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Test Date</th>
+                        <th>Uploaded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        {% if user.profile.is_teacher %}
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 32px; height: 32px; background: var(--accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+                                    {{ record.student.username|first|upper }}
+                                </div>
+                                {{ record.student.username }}
+                            </div>
+                        </td>
+                        {% endif %}
+                        <td>
+                            <span style="background: var(--glass-bg); padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 500;">
+                                {{ record.subject }}
+                            </span>
+                        </td>
+                        <td>{{ record.score }}/{{ record.max_score }}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                {% with percentage=record.score|floatformat:1 %}
+                                <span style="font-weight: 600;">{{ percentage }}%</span>
+                                {% if percentage >= '90' %}
+                                    <span style="color: var(--success);">🏆</span>
+                                {% elif percentage >= '80' %}
+                                    <span style="color: var(--warning);">⭐</span>
+                                {% elif percentage >= '70' %}
+                                    <span style="color: var(--accent-primary);">👍</span>
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+                        </td>
+                        <td>{{ record.test_date|date:"M d, Y" }}</td>
+                        <td style="color: var(--text-muted); font-size: 0.875rem;">{{ record.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <p class="empty-text">
+                {% if user.profile.is_teacher %}
+                    No test records uploaded yet. Start by uploading your first student scores!
+                {% else %}
+                    No test records found. Your teacher hasn't uploaded any scores for you yet.
+                {% endif %}
+            </p>
+            {% if user.profile.is_teacher %}
+                <div style="margin-top: 2rem;">
+                    <a href="{% url 'upload_record' %}" class="btn btn-primary">Upload First Score</a>
+                </div>
+            {% endif %}
+        </div>
     {% endif %}
 </div>
 {% endblock %}

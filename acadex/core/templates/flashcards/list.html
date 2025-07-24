@@ -3,36 +3,149 @@
 {% block title %}Flashcards - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>📚 Flashcards</h2>
-    
-    <div style="margin: 20px 0;">
-        <a href="/flashcards/create/" class="btn">Create New Flashcard</a>
-    </div>
-    
-    {% if flashcards %}
-        {% regroup flashcards by subject as subject_groups %}
-        {% for subject_group in subject_groups %}
-            <h3>{{ subject_group.grouper }}</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px;">
+<div class="dashboard-header">
+    <h1 class="page-title">📚 Study Flashcards</h1>
+    <p class="page-subtitle">Practice with flashcards and earn points for correct answers</p>
+</div>
+
+<div style="text-align: center; margin-bottom: 2rem;">
+    <a href="{% url 'create_flashcard' %}" class="btn btn-primary btn-large">
+        Create New Flashcard (+5 points)
+    </a>
+</div>
+
+{% if flashcards %}
+    {% regroup flashcards by subject as subject_groups %}
+    {% for subject_group in subject_groups %}
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">{{ subject_group.grouper }}</h2>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
                 {% for flashcard in subject_group.list %}
-                    <div class="card" style="margin: 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                            <strong>{{ flashcard.question|truncatechars:50 }}</strong>
+                    <div class="flashcard-preview">
+                        <div class="flashcard-header">
+                            <div class="flashcard-question">
+                                {{ flashcard.question|truncatechars:80 }}
+                            </div>
                             {% if flashcard.is_public %}
-                                <span style="background: #4CAF50; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px;">Public</span>
+                                <span class="public-badge">Public</span>
                             {% endif %}
                         </div>
-                        <p style="font-size: 14px; color: #666;">By: {{ flashcard.creator.username }}</p>
-                        <p style="font-size: 14px; color: #666;">Created: {{ flashcard.created_at|date:"M d, Y" }}</p>
-                        <a href="/flashcards/{{ flashcard.id }}/study/" class="btn" style="font-size: 14px; padding: 5px 10px;">Study This</a>
+                        
+                        <div class="flashcard-meta">
+                            <div class="creator-info">
+                                <div class="creator-avatar">
+                                    {{ flashcard.creator.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="creator-name">{{ flashcard.creator.username }}</div>
+                                    <div class="created-date">{{ flashcard.created_at|date:"M d, Y" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flashcard-actions">
+                            <a href="{% url 'study_flashcard' flashcard.id %}" class="btn btn-primary btn-full">
+                                Study This Card
+                            </a>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No flashcards available.</p>
-        <p><a href="/flashcards/create/">Create your first flashcard</a> to get started!</p>
-    {% endif %}
-</div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="section-card">
+        <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <p class="empty-text">No flashcards available yet.</p>
+            <div style="margin-top: 2rem;">
+                <a href="{% url 'create_flashcard' %}" class="btn btn-primary">Create Your First Flashcard</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+.flashcard-preview {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.flashcard-preview:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--shadow-medium);
+}
+
+.flashcard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+}
+
+.flashcard-question {
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.public-badge {
+    background: var(--success);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.flashcard-meta {
+    flex: 1;
+}
+
+.creator-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.creator-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.creator-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.created-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.flashcard-actions {
+    margin-top: auto;
+}
+</style>
 {% endblock %}

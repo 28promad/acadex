@@ -1,51 +1,72 @@
-<!-- templates/records/upload.html -->
 {% extends 'base.html' %}
 
 {% block title %}Upload Test Scores - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>Upload Test Scores 📊</h2>
-    
-    <form method="post">
+<div class="dashboard-header">
+    <h1 class="page-title">Upload Test Scores</h1>
+    <p class="page-subtitle">Record student performance and award points automatically</p>
+</div>
+
+<div class="section-card">
+    <form method="post" class="auth-form">
         {% csrf_token %}
         
         <div class="form-group">
-            <label for="student_username">Student Username:</label>
-            <input type="text" name="student_username" required>
-            <small>Enter the exact username of the student</small>
+            <label for="student_username" class="form-label">Student Username</label>
+            <input type="text" id="student_username" name="student_username" class="form-input" required>
+            <small style="color: var(--text-muted); font-size: 0.875rem;">Enter the exact username of the student</small>
         </div>
         
         <div class="form-group">
-            <label for="subject">Subject:</label>
-            <input type="text" name="subject" required placeholder="e.g. Mathematics, Science, History">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" id="subject" name="subject" class="form-input" required placeholder="e.g. Mathematics, Science, History">
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="score" class="form-label">Score Achieved</label>
+                <input type="number" id="score" name="score" step="0.1" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="max_score" class="form-label">Maximum Score</label>
+                <input type="number" id="max_score" name="max_score" step="0.1" value="100" class="form-input" required>
+            </div>
         </div>
         
         <div class="form-group">
-            <label for="score">Score:</label>
-            <input type="number" name="score" step="0.1" required>
+            <label for="test_date" class="form-label">Test Date</label>
+            <input type="date" id="test_date" name="test_date" class="form-input" required>
         </div>
         
-        <div class="form-group">
-            <label for="max_score">Max Score:</label>
-            <input type="number" name="max_score" step="0.1" value="100" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="test_date">Test Date:</label>
-            <input type="date" name="test_date" required>
-        </div>
-        
-        <button type="submit" class="btn">Upload Score</button>
+        <button type="submit" class="btn btn-primary btn-full">Upload Score & Award Points</button>
     </form>
 </div>
 
-<div class="card">
-    <h3>How Points Are Awarded 💰</h3>
-    <ul>
-        <li><strong>Base Points:</strong> 1 point per 10% scored (e.g., 90% = 9 points)</li>
-        <li><strong>Improvement Bonus:</strong> 2 points per % improved from last test</li>
-        <li><strong>Participation:</strong> Students get points just for taking tests!</li>
-    </ul>
+<div class="section-card">
+    <div class="section-header">
+        <h2 class="section-title">Point Calculation System</h2>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Base Points</h3>
+            <p class="feature-description">1 point awarded per 10% scored (90% = 9 points)</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3 class="feature-title">Improvement Bonus</h3>
+            <p class="feature-description">2 points per percentage point improved from last test</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Participation Reward</h3>
+            <p class="feature-description">Students earn points just for taking tests regularly</p>
+        </div>
+    </div>
 </div>
 {% endblock %}

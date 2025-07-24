@@ -1,52 +1,129 @@
-<!-- templates/core/dashboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Dashboard - Acadex{% endblock %}
 
-
-
 {% block content %}
-<h2>{% if profile.is_teacher %}Teacher{% else %}Student{% endif %} Dashboard</h2>
-
-<div class="card">
-    <h3>Your Stats 📊</h3>
-    <p><strong>Total Points:</strong> {{ profile.points }}</p>
-    <p><strong>Current Streak:</strong> <span class="streak">{{ profile.streak_days }} days 🔥</span></p>
-    <p><strong>Last Activity:</strong> {{ profile.last_activity|default:"Never" }}</p>
+<div class="dashboard-header">
+    <h1 class="page-title">
+        {% if profile.is_teacher %}Teacher Dashboard{% else %}Student Dashboard{% endif %}
+    </h1>
+    <p class="page-subtitle">Welcome back, {{ user.first_name|default:user.username }}!</p>
 </div>
 
-{% if recent_points %}
-<div class="card">
-    <h3>Recent Point History 💰</h3>
-    <table>
-        <tr>
-            <th>Points</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Date</th>
-        </tr>
-        {% for transaction in recent_points %}
-        <tr>
-            <td>+{{ transaction.points }}</td>
-            <td>{{ transaction.get_point_type_display }}</td>
-            <td>{{ transaction.description }}</td>
-            <td>{{ transaction.created_at|date:"M d, Y" }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-{% endif %}
+<div class="dashboard-grid">
+    <!-- Stats Overview -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-content">
+                    <div class="stat-value">{{ profile.points|default:0 }}</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                <div class="stat-icon">🏆</div>
+            </div>
+            
+            <div class="stat-card secondary">
+                <div class="stat-content">
+                    <div class="stat-value">{{ profile.streak_days|default:0 }}</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-icon">🔥</div>
+            </div>
+            
+            <div class="stat-card tertiary">
+                <div class="stat-content">
+                    <div class="stat-value">{{ profile.last_activity|date:"M d"|default:"Never" }}</div>
+                    <div class="stat-label">Last Activity</div>
+                </div>
+                <div class="stat-icon">📅</div>
+            </div>
+        </div>
+    </div>
 
-<div class="card">
-    <h3>Quick Actions 🚀</h3>
-    {% if profile.is_teacher %}
-        <a href="/records/upload/" class="btn">Upload Test Scores</a>
-        <a href="/records/" class="btn" style="background: #2196F3;">View All Records</a>
-    {% else %}
-        <a href="/flashcards/create/" class="btn">Create Flashcard</a>
-        <a href="/flashcards/" class="btn" style="background: #2196F3;">Study Flashcards</a>
-        <a href="/records/" class="btn" style="background: #FF9800;">View My Scores</a>
-    {% endif %}
-    <a href="/leaderboard/" class="btn" style="background: #9C27B0;">View Leaderboard</a>
+    <!-- Recent Activity -->
+    <div class="activity-section">
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Recent Activity</h2>
+            </div>
+            
+            {% if recent_points %}
+                <div class="activity-list">
+                    {% for transaction in recent_points %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                {% if transaction.point_type == 'test' %}📝
+                                {% elif transaction.point_type == 'quiz' %}❓
+                                {% elif transaction.point_type == 'study' %}📚
+                                {% elif transaction.point_type == 'streak' %}🔥
+                                {% elif transaction.point_type == 'improvement' %}📈
+                                {% else %}⭐
+                                {% endif %}
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">{{ transaction.description }}</div>
+                                <div class="activity-meta">{{ transaction.created_at|date:"M d, Y" }}</div>
+                            </div>
+                            <div class="activity-points">+{{ transaction.points }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📊</div>
+                    <p class="empty-text">No recent activity. Start learning to see your progress here!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-section">
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Quick Actions</h2>
+            </div>
+            
+            <div class="actions-grid">
+                {% if profile.is_teacher %}
+                    <a href="{% url 'upload_record' %}" class="action-card">
+                        <div class="action-icon">📊</div>
+                        <div class="action-title">Upload Scores</div>
+                        <div class="action-description">Record student test results</div>
+                    </a>
+                    
+                    <a href="{% url 'view_records' %}" class="action-card">
+                        <div class="action-icon">📋</div>
+                        <div class="action-title">View Records</div>
+                        <div class="action-description">Review all uploaded scores</div>
+                    </a>
+                {% else %}
+                    <a href="{% url 'create_flashcard' %}" class="action-card">
+                        <div class="action-icon">📚</div>
+                        <div class="action-title">Create Flashcard</div>
+                        <div class="action-description">Build your study materials</div>
+                    </a>
+                    
+                    <a href="{% url 'flashcard_list' %}" class="action-card">
+                        <div class="action-icon">🎯</div>
+                        <div class="action-title">Study Now</div>
+                        <div class="action-description">Practice with flashcards</div>
+                    </a>
+                    
+                    <a href="{% url 'view_records' %}" class="action-card">
+                        <div class="action-icon">📈</div>
+                        <div class="action-title">My Progress</div>
+                        <div class="action-description">View test scores & trends</div>
+                    </a>
+                {% endif %}
+                
+                <a href="{% url 'leaderboard' %}" class="action-card">
+                    <div class="action-icon">🏆</div>
+                    <div class="action-title">Leaderboard</div>
+                    <div class="action-description">See top performers</div>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

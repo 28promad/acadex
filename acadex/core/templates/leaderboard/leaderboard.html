@@ -1,71 +1,254 @@
-<!-- templates/leaderboard/leaderboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Leaderboard - Acadex{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>🏆 Leaderboard</h2>
-    
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <!-- All Time Leaders -->
-        <div style="flex: 1; min-width: 300px;">
-            <h3>🌟 All-Time Leaders</h3>
-            {% if top_users %}
-                <table>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Student</th>
-                        <th>Points</th>
-                        <th>Streak</th>
-                    </tr>
-                    {% for profile in top_users %}
-                    <tr {% if profile.user == user %}style="background: #e8f5e8;"{% endif %}>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ profile.user.username }}{% if profile.user == user %} (You!){% endif %}</td>
-                        <td>{{ profile.points }}</td>
-                        <td><span class="streak">{{ profile.streak_days }} 🔥</span></td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <p>No students yet. Be the first!</p>
-            {% endif %}
+<div class="dashboard-header">
+    <h1 class="page-title">🏆 Leaderboard</h1>
+    <p class="page-subtitle">See who's leading the learning race</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+    <!-- All Time Leaders -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2 class="section-title">🌟 All-Time Champions</h2>
         </div>
         
-        <!-- Weekly Leaders -->
-        <div style="flex: 1; min-width: 300px;">
-            <h3>⚡ This Week's Stars</h3>
-            {% if weekly_leaderboard %}
-                <table>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Student</th>
-                        <th>This Week</th>
-                    </tr>
-                    {% for item in weekly_leaderboard %}
-                    <tr {% if item.profile.user == user %}style="background: #e8f5e8;"{% endif %}>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.profile.user.username }}{% if item.profile.user == user %} (You!){% endif %}</td>
-                        <td>+{{ item.weekly_points }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <p>No activity this week yet.</p>
-            {% endif %}
+        {% if top_users %}
+            <div class="leaderboard-list">
+                {% for profile in top_users %}
+                <div class="leaderboard-item {% if profile.user == user %}current-user{% endif %}">
+                    <div class="rank-badge rank-{{ forloop.counter }}">
+                        {% if forloop.counter == 1 %}🥇
+                        {% elif forloop.counter == 2 %}🥈
+                        {% elif forloop.counter == 3 %}🥉
+                        {% else %}{{ forloop.counter }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            {{ profile.user.username|first|upper }}
+                        </div>
+                        <div class="user-details">
+                            <div class="username">
+                                {{ profile.user.username }}
+                                {% if profile.user == user %}
+                                    <span class="you-badge">You!</span>
+                                {% endif %}
+                            </div>
+                            <div class="streak">{{ profile.streak_days }} day streak 🔥</div>
+                        </div>
+                    </div>
+                    
+                    <div class="points-display">{{ profile.points }} pts</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🏆</div>
+                <p class="empty-text">No champions yet. Be the first to earn points!</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Weekly Leaders -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2 class="section-title">⚡ This Week's Stars</h2>
+        </div>
+        
+        {% if weekly_leaderboard %}
+            <div class="leaderboard-list">
+                {% for item in weekly_leaderboard %}
+                <div class="leaderboard-item {% if item.profile.user == user %}current-user{% endif %}">
+                    <div class="rank-badge">{{ forloop.counter }}</div>
+                    
+                    <div class="user-info">
+                        <div class="user-avatar weekly">
+                            {{ item.profile.user.username|first|upper }}
+                        </div>
+                        <div class="user-details">
+                            <div class="username">
+                                {{ item.profile.user.username }}
+                                {% if item.profile.user == user %}
+                                    <span class="you-badge">You!</span>
+                                {% endif %}
+                            </div>
+                            <div class="weekly-label">This week</div>
+                        </div>
+                    </div>
+                    
+                    <div class="points-display weekly">+{{ item.weekly_points }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">⚡</div>
+                <p class="empty-text">No activity this week yet. Start studying to claim your spot!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h2 class="section-title">🎯 How to Climb the Rankings</h2>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🔥</div>
+            <h3 class="feature-title">Build Streaks</h3>
+            <p class="feature-description">Study consistently to maintain your learning streak and earn bonus points</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3 class="feature-title">Create Content</h3>
+            <p class="feature-description">Make flashcards and study materials to earn 5 points each</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3 class="feature-title">Show Improvement</h3>
+            <p class="feature-description">Focus on getting better scores over time for improvement bonuses</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Stay Active</h3>
+            <p class="feature-description">Answer quiz questions correctly and participate regularly</p>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <h3>🎯 How to Climb the Leaderboard</h3>
-    <ul>
-        <li>Study consistently to build your streak</li>
-        <li>Create and use flashcards (+5 points each)</li>
-        <li>Take tests and quizzes regularly</li>
-        <li>Focus on improving your scores over time</li>
-        <li>Answer flashcard questions correctly (+2 points each)</li>
-    </ul>
-</div>
+<style>
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--shadow-light);
+}
+
+.leaderboard-item.current-user {
+    background: var(--glass-bg);
+    border: 2px solid var(--accent-primary);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.2);
+}
+
+.rank-badge {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 2px solid var(--border-color);
+}
+
+.rank-badge.rank-1 {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    border-color: #ffd700;
+    font-size: 1.5rem;
+}
+
+.rank-badge.rank-2 {
+    background: linear-gradient(135deg, #c0c0c0, #e5e7eb);
+    border-color: #c0c0c0;
+    font-size: 1.5rem;
+}
+
+.rank-badge.rank-3 {
+    background: linear-gradient(135deg, #cd7f32, #d97706);
+    border-color: #cd7f32;
+    font-size: 1.5rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.user-avatar.weekly {
+    background: var(--warning);
+}
+
+.user-details {
+    flex: 1;
+}
+
+.username {
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.you-badge {
+    background: var(--accent-primary);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 1rem;
+    font-weight: 600;
+}
+
+.streak {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.weekly-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.points-display {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--accent-primary);
+}
+
+.points-display.weekly {
+    color: var(--warning);
+}
+</style>
 {% endblock %}
