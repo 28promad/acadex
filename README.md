@@ -22,7 +22,7 @@ Admin interface for testing
 
 ## Quick start
 1. Clone our github repo
-2. Install dependencies from the requirements file / activate the virtual env provided in our repo
+2. Install dependencies from the requirements file
 3. I would recommend you use a virtual environment to avoid making changes to your systems python
 4. `pip install -r requirements.txt`
 5. cd into the acadex folder `acadex/acadex`
