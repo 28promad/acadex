@@ -1,4 +1,3 @@
-
 class ThemeManager {
   constructor() {
     this.themeToggle = document.getElementById('themeToggle');
@@ -38,7 +37,19 @@ class ThemeManager {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
     this.currentTheme = theme;
-    
+
+    // Update body background image based on theme
+    const body = document.body;
+    if (theme === 'dark') {
+      body.style.backgroundImage = "url('/static/assets/bg.jpg')";
+    } else {
+      body.style.backgroundImage = "url('/static/assets/bg2.jpg')";
+    }
+    body.style.backgroundRepeat = "no-repeat";
+    body.style.backgroundPosition = "center center";
+    body.style.backgroundAttachment = "fixed";
+    body.style.backgroundSize = "cover";
+
     // Update toggle button state
     this.updateToggleButton();
   }

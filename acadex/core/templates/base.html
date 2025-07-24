@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Acadex - Gamified Learning Platform{% endblock %}</title>
     {% load static %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/favicon.png' %}" >
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="bg-primary">
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -54,7 +55,7 @@
                     <!-- User Menu -->
                     <div class="user-menu">
                         <span class="username">{{ user.username }}</span>
-                        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+                        <a href="{% url 'login' %}" class="logout-btn">Change account</a>
                     </div>
                 {% else %}
                     <div class="auth-links">
