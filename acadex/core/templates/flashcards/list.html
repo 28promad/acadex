@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Flashcards - Acadex{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📚 Flashcards</h2>
+    
+    <div style="margin: 20px 0;">
+        <a href="/flashcards/create/" class="btn">Create New Flashcard</a>
+    </div>
+    
+    {% if flashcards %}
+        {% regroup flashcards by subject as subject_groups %}
+        {% for subject_group in subject_groups %}
+            <h3>{{ subject_group.grouper }}</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                {% for flashcard in subject_group.list %}
+                    <div class="card" style="margin: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <strong>{{ flashcard.question|truncatechars:50 }}</strong>
+                            {% if flashcard.is_public %}
+                                <span style="background: #4CAF50; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px;">Public</span>
+                            {% endif %}
+                        </div>
+                        <p style="font-size: 14px; color: #666;">By: {{ flashcard.creator.username }}</p>
+                        <p style="font-size: 14px; color: #666;">Created: {{ flashcard.created_at|date:"M d, Y" }}</p>
+                        <a href="/flashcards/{{ flashcard.id }}/study/" class="btn" style="font-size: 14px; padding: 5px 10px;">Study This</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No flashcards available.</p>
+        <p><a href="/flashcards/create/">Create your first flashcard</a> to get started!</p>
+    {% endif %}
+</div>
+{% endblock %}

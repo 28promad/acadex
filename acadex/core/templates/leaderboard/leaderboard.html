@@ -1,0 +1,71 @@
+<!-- templates/leaderboard/leaderboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Leaderboard - Acadex{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🏆 Leaderboard</h2>
+    
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <!-- All Time Leaders -->
+        <div style="flex: 1; min-width: 300px;">
+            <h3>🌟 All-Time Leaders</h3>
+            {% if top_users %}
+                <table>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student</th>
+                        <th>Points</th>
+                        <th>Streak</th>
+                    </tr>
+                    {% for profile in top_users %}
+                    <tr {% if profile.user == user %}style="background: #e8f5e8;"{% endif %}>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ profile.user.username }}{% if profile.user == user %} (You!){% endif %}</td>
+                        <td>{{ profile.points }}</td>
+                        <td><span class="streak">{{ profile.streak_days }} 🔥</span></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No students yet. Be the first!</p>
+            {% endif %}
+        </div>
+        
+        <!-- Weekly Leaders -->
+        <div style="flex: 1; min-width: 300px;">
+            <h3>⚡ This Week's Stars</h3>
+            {% if weekly_leaderboard %}
+                <table>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student</th>
+                        <th>This Week</th>
+                    </tr>
+                    {% for item in weekly_leaderboard %}
+                    <tr {% if item.profile.user == user %}style="background: #e8f5e8;"{% endif %}>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.profile.user.username }}{% if item.profile.user == user %} (You!){% endif %}</td>
+                        <td>+{{ item.weekly_points }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No activity this week yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>🎯 How to Climb the Leaderboard</h3>
+    <ul>
+        <li>Study consistently to build your streak</li>
+        <li>Create and use flashcards (+5 points each)</li>
+        <li>Take tests and quizzes regularly</li>
+        <li>Focus on improving your scores over time</li>
+        <li>Answer flashcard questions correctly (+2 points each)</li>
+    </ul>
+</div>
+{% endblock %}

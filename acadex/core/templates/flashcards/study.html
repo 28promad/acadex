@@ -1,0 +1,32 @@
+<!-- templates/flashcards/study.html -->
+{% extends 'base.html' %}
+
+{% block title %}Study Flashcard - Acadex{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📖 Study Time!</h2>
+    
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>Subject:</strong> {{ flashcard.subject }}</p>
+        <h3 style="color: #333;">{{ flashcard.question }}</h3>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="user_answer">Your Answer:</label>
+            <textarea name="user_answer" rows="3" required placeholder="Type your answer here..."></textarea>
+            <small>Tip: Answers are case-insensitive, so don't worry about capitalization!</small>
+        </div>
+        
+        <button type="submit" class="btn">Submit Answer</button>
+        <a href="/flashcards/" class="btn" style="background: #666;">Back to Flashcards</a>
+    </form>
+    
+    <div style="margin-top: 30px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+        <p><strong>💡 Remember:</strong> You'll get +2 points for each correct answer!</p>
+    </div>
+</div>
+{% endblock %}

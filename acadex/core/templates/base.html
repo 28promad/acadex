@@ -1,0 +1,81 @@
+<!-- templates/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Acadex - Gamified Learning{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header {
+            /* background: linear-gradient(23deg, #edf5ff, #3ad542); */
+            background: #edf5ff;
+            /* color: rgb(255, 255, 255); */
+            color: #303033;
+            padding: 15px;
+            margin: -20px -20px 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header:hover{
+            border-radius: 16px 16px 0 0;
+            border:3px solid #
+        }
+        .nav { margin: 15px 0; }
+        .nav a { margin-right: 15px; color: #4CAF50; text-decoration: none; }
+        .nav a:hover { text-decoration: underline; }
+        .points-badge { background: #FF9800; color: white; padding: 5px 10px; border-radius: 15px; font-weight: bold; }
+        .btn { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #45a049; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px; }
+        .streak { color: #FF5722; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f9f9f9; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{% static 'assets/BlueLogo.png' %}" alt="testImage" height="80px" style="border-radius:20%">
+            <span>🎯 Acadex</span>
+            <p>Your gamified learning companion</p>
+        </div>
+        
+        <div class="nav">
+            <a href="{% url 'home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="/leaderboard/">Leaderboard</a>
+                <a href="/flashcards/">Flashcards</a>
+                {% if user.profile.is_teacher %}
+                    <a href="/records/upload/">Upload Scores</a>
+                {% endif %}
+                <a href="{% url 'logout' %}">Logout ({{ user.username }})</a>
+                <span class="points-badge">{{ user.profile.points }} pts</span>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %}
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="card" style="background: #d4edda; border-color: #c3e6cb;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

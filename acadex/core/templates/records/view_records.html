@@ -1,0 +1,44 @@
+<!-- templates/records/view_records.html -->
+{% extends 'base.html' %}
+
+{% block title %}Test Records - Acadex{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>{% if user.profile.is_teacher %}Uploaded Test Records{% else %}My Test Records{% endif %} 📋</h2>
+    
+    {% if records %}
+        <table>
+            <tr>
+                {% if user.profile.is_teacher %}
+                <th>Student</th>
+                {% endif %}
+                <th>Subject</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Test Date</th>
+                <th>Uploaded</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                {% if user.profile.is_teacher %}
+                <td>{{ record.student.username }}</td>
+                {% endif %}
+                <td>{{ record.subject }}</td>
+                <td>{{ record.score }}/{{ record.max_score }}</td>
+                <td>{{ record.score|floatformat:1 }}%</td>
+                <td>{{ record.test_date|date:"M d, Y" }}</td>
+                <td>{{ record.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No test records found.</p>
+        {% if user.profile.is_teacher %}
+            <p>Start by <a href="{% url 'upload_record' %}">uploading your first test scores</a>!</p>
+        {% else %}
+            <p>Your teacher hasn't uploaded any scores for you yet.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!-- templates/core/home.html -->
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+
+{% block content %}
+
+<div class="card">
+    <h2>Welcome to Acadex! 🚀</h2>
+    <p>Transform your learning journey into an engaging game. Track progress, earn points, and climb the leaderboards!</p>
+    
+    {% if not user.is_authenticated %}
+        <h3>Features:</h3>
+        <ul>
+            <li>📊 Track academic progress and earn points</li>
+            <li>🏆 Compete on leaderboards</li>
+            <li>🔥 Build learning streaks</li>
+            <li>📚 Create and use flashcards</li>
+            <li>📈 See improvement over time</li>
+        </ul>
+        
+        <div style="margin: 20px 0;">
+            <a href="{% url 'signup' %}" class="btn">Get Started</a>
+            <a href="{% url 'login' %}" class="btn" style="background: #2196F3;">Login</a>
+        </div>
+    {% else %}
+        <h3>Quick Stats:</h3>
+        <p>Points: <strong>{{ user.profile.points }}</strong></p>
+        <p>Streak: <span class="streak">{{ user.profile.streak_days }} days 🔥</span></p>
+        
+        <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}

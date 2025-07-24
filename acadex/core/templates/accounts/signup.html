@@ -1,0 +1,46 @@
+<!-- templates/accounts/signup.html -->
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - Acadex{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Join Acadex! 🎯</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password1">Password:</label>
+            <input type="password" name="password1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password2">Confirm Password:</label>
+            <input type="password" name="password2" required>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="is_teacher" value="1"> I am a teacher
+            </label>
+        </div>
+        
+        <button type="submit" class="btn">Sign Up</button>
+    </form>
+    
+    <p style="margin-top: 20px;">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </p>
+</div>
+{% endblock %}

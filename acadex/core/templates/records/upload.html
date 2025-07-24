@@ -1,0 +1,51 @@
+<!-- templates/records/upload.html -->
+{% extends 'base.html' %}
+
+{% block title %}Upload Test Scores - Acadex{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Upload Test Scores 📊</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="student_username">Student Username:</label>
+            <input type="text" name="student_username" required>
+            <small>Enter the exact username of the student</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" name="subject" required placeholder="e.g. Mathematics, Science, History">
+        </div>
+        
+        <div class="form-group">
+            <label for="score">Score:</label>
+            <input type="number" name="score" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="max_score">Max Score:</label>
+            <input type="number" name="max_score" step="0.1" value="100" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="test_date">Test Date:</label>
+            <input type="date" name="test_date" required>
+        </div>
+        
+        <button type="submit" class="btn">Upload Score</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>How Points Are Awarded 💰</h3>
+    <ul>
+        <li><strong>Base Points:</strong> 1 point per 10% scored (e.g., 90% = 9 points)</li>
+        <li><strong>Improvement Bonus:</strong> 2 points per % improved from last test</li>
+        <li><strong>Participation:</strong> Students get points just for taking tests!</li>
+    </ul>
+</div>
+{% endblock %}

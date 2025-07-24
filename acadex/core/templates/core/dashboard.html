@@ -1,0 +1,52 @@
+<!-- templates/core/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Acadex{% endblock %}
+
+
+
+{% block content %}
+<h2>{% if profile.is_teacher %}Teacher{% else %}Student{% endif %} Dashboard</h2>
+
+<div class="card">
+    <h3>Your Stats 📊</h3>
+    <p><strong>Total Points:</strong> {{ profile.points }}</p>
+    <p><strong>Current Streak:</strong> <span class="streak">{{ profile.streak_days }} days 🔥</span></p>
+    <p><strong>Last Activity:</strong> {{ profile.last_activity|default:"Never" }}</p>
+</div>
+
+{% if recent_points %}
+<div class="card">
+    <h3>Recent Point History 💰</h3>
+    <table>
+        <tr>
+            <th>Points</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Date</th>
+        </tr>
+        {% for transaction in recent_points %}
+        <tr>
+            <td>+{{ transaction.points }}</td>
+            <td>{{ transaction.get_point_type_display }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.created_at|date:"M d, Y" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+<div class="card">
+    <h3>Quick Actions 🚀</h3>
+    {% if profile.is_teacher %}
+        <a href="/records/upload/" class="btn">Upload Test Scores</a>
+        <a href="/records/" class="btn" style="background: #2196F3;">View All Records</a>
+    {% else %}
+        <a href="/flashcards/create/" class="btn">Create Flashcard</a>
+        <a href="/flashcards/" class="btn" style="background: #2196F3;">Study Flashcards</a>
+        <a href="/records/" class="btn" style="background: #FF9800;">View My Scores</a>
+    {% endif %}
+    <a href="/leaderboard/" class="btn" style="background: #9C27B0;">View Leaderboard</a>
+</div>
+{% endblock %}
