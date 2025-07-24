@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="hero-section">
     <div class="hero-content">
@@ -7,6 +7,9 @@
         <p class="hero-subtitle">
             Track progress, earn achievements, and climb leaderboards while mastering your subjects
         </p>
+        <div class="hero-cap-container">
+            <img src="{% static 'assets/cap.gif' %}" alt="Graduation Cap Animation" class="hero-cap-img">
+        </div>
         
         {% if not user.is_authenticated %}
             <div class="hero-actions">
