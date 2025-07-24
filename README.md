@@ -1,17 +1,17 @@
 # Acadex
 
 ## Core Features
-    ### User system
+- User system
       Students & teachers with profiles
-    ### Points system
+- Points system
       Automatic point awarding for activities
-    ### Test Records
+- Test Records
       Teachers upload & students see their progress
-    ### Leaderboards
+- Leaderboards
       All-time and weekly rankings
-    ### Flashcards
+- Flashcards
       Create, study, & earn points
-    ### Gamification
+- Gamification
       Streaks, improvement bonuses & consistent engagement
 
 ## Our prototype
